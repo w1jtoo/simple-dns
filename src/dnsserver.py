@@ -1,17 +1,22 @@
 import asyncio, socket
 
+from typing import List, Tuple
+
 class DNSServer(): 
     # take from docs.python
+    def __init__(self, forwarder) -> None:
+        self._forwarder = forwarder
+
     def connection_made(self, transport) -> None:
         print("connection made")
         self.transport = transport
+
+    def 
     
     def datagram_received(self, data, addr) -> None: 
-        msg = data.decode()
-        print(msg)
         self.transport.sendto(data, addr)
 
-def start_server(address: str, port: int) -> None: 
+def start_server(address: str, port: int, forwader: List[Tuple[str, int]]) -> None: 
     async def _start():
         loop = asyncio.get_running_loop()
         
@@ -19,6 +24,7 @@ def start_server(address: str, port: int) -> None:
                 lambda: DNSServer(),
                 local_addr=(address, port)
                 )
+        # TODO: fix timeout
         try: 
             await asyncio.sleep(1000)
         finally:
