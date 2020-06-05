@@ -1,6 +1,8 @@
-import asyncio, socket
+import asyncio, socket, struct
 
 from typing import List, Tuple
+
+from src.utils import with_padding
 
 class DNSServer(): 
     # take from docs.python
@@ -11,8 +13,12 @@ class DNSServer():
         print("connection made")
         self.transport = transport
 
-    def 
-    
+    def _make_error_pkg(self, packet: str) -> str:  
+        flags = '1' + with_padding(bin(packet[2])[2:])[1:]
+        rcode = with_padding(bin(packet[3])[2:])
+
+        return packet[:2] + struct.pack('>H', int(flags + rcode[:4] + '0010', 2)) + packet[4:]
+
     def datagram_received(self, data, addr) -> None: 
         self.transport.sendto(data, addr)
 
